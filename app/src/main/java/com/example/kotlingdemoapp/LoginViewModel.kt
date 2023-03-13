@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -58,24 +59,24 @@ class LoginViewModel : ViewModel(){
             return
         }
 
-        runBlocking{
-            launch{
-                try {
-                    var session : Session = MainActivity.getMatrix() // singleton
-                        .authenticationService().directAuthentication(
-                            homeServerConnectionConfig,
-                            username,
-                            password,
-                            "matrix-sdk-android2-sample"
-                        )
-                    SessionHolder.currentSession = session
-                    // same stuff that happens in SampleApp
-                    session.open()
-                    session.syncService().startSync(true)
-                    println("Logged in!");
-                } catch (failure: Throwable) {
-                    println("Something failed 2");
-                }
+        viewModelScope.launch{
+            try {
+                MainActivity.getMatrix() // singleton
+                    .authenticationService().directAuthentication(
+                        homeServerConnectionConfig,
+                        username,
+                        password,
+                        "matrix-sdk-android2-sample"
+                    )
+            } catch (failure: Throwable) {
+                println("Something failed 2");
+                null
+            }?.let{
+                session->
+                SessionHolder.currentSession = session
+                // same stuff that happens in SampleApp
+                session.open()
+                session.syncService().startSync(true)
             }
         }
         // Then you can retrieve the authentication service.
