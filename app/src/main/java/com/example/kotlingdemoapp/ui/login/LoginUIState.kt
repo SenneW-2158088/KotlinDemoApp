@@ -1,4 +1,4 @@
-package com.example.kotlingdemoapp
+package com.example.kotlingdemoapp.ui.login
 
 data class LoginUIState (
     val homeserver: String = "https://matrix-client.matrix.org/",

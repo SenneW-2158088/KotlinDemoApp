@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.kotlingdemoapp.theme
+package com.example.kotlingdemoapp.ui.theme
 
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Shapes
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 
-val Shapes = Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(4.dp),
-    large = RoundedCornerShape(0.dp)
-)
+val Pink400 = Color(0xFFEC407A)
+val Pink600 = Color(0xFFD81B60)
+val Pink950 = Color(0xFFB31650)
+val Purple400 = Color(0xFFAB47BC)
+val Purple700 = Color(0xFF7B1FA2)
+val Black = Color(0xFF000000)
+val White = Color(0xFFFFFFFF)
+

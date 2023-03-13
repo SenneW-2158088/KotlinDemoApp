@@ -34,7 +34,6 @@ fun DemoApp(
                 )
             }
             composable(route = DemoScreen.ChatOverview.name){
-                println("yo we made it here");
                 ChatOverviewScreen()
             }
         }

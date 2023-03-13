@@ -1,4 +1,4 @@
-package com.example.kotlingdemoapp
+package com.example.kotlingdemoapp.ui.chatOverview
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

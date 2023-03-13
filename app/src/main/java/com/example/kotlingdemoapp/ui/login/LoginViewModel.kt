@@ -1,19 +1,16 @@
-package com.example.kotlingdemoapp
+package com.example.kotlingdemoapp.ui.login
 
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kotlingdemoapp.MainActivity
+import com.example.kotlingdemoapp.SessionHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.matrix.android.sdk.api.auth.data.HomeServerConnectionConfig
-import org.matrix.android.sdk.api.session.Session
 
 class LoginViewModel : ViewModel(){
     private val _uiState = MutableStateFlow(LoginUIState())

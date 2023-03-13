@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.kotlingdemoapp.theme
+package com.example.kotlingdemoapp.ui.theme
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
-val Pink400 = Color(0xFFEC407A)
-val Pink600 = Color(0xFFD81B60)
-val Pink950 = Color(0xFFB31650)
-val Purple400 = Color(0xFFAB47BC)
-val Purple700 = Color(0xFF7B1FA2)
-val Black = Color(0xFF000000)
-val White = Color(0xFFFFFFFF)
-
+// Set of Material typography styles to start with
+val Typography = Typography(
+    body1 = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp
+    )
+)

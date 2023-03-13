@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.kotlingdemoapp.theme.DemoTheme
+import com.example.kotlingdemoapp.ui.theme.DemoTheme
 import org.matrix.android.sdk.api.Matrix
 import org.matrix.android.sdk.api.MatrixConfiguration
 import com.example.kotlingdemoapp.util.RoomDisplayNameFallbackProviderImpl
