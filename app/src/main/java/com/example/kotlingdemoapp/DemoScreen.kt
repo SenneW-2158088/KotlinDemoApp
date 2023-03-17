@@ -8,13 +8,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.kotlingdemoapp.ui.chatRoom.ChatRoomScreen
+import com.example.kotlingdemoapp.ui.chatRoom.ChatRoomViewModel
 
 
 enum class DemoScreen(@StringRes val title: Int){
     Login(title = R.string.login_screen_title),
-    ChatOverview(title = R.string.chatoverview_screen_title)
+    ChatOverview(title = R.string.chatoverview_screen_title),
+    ChatRoom(title = R.string.chat_room)
 }
 
 @Composable
@@ -34,7 +39,21 @@ fun DemoApp(
                 )
             }
             composable(route = DemoScreen.ChatOverview.name){
-                ChatOverviewScreen()
+                ChatOverviewScreen(
+                    onNextButtonClicked = { roomId : String -> navController.navigate(DemoScreen.ChatRoom.name + "/" + roomId)}
+                )
+            }
+            composable(
+                route = DemoScreen.ChatRoom.name + "/{roomId}",
+                arguments = listOf(navArgument("roomId")
+                    {
+                        type = NavType.StringType;
+                        defaultValue = "0";
+                        nullable = true;
+                    }
+                )
+            ){ backStackEntry ->
+                ChatRoomScreen(Modifier, ChatRoomViewModel(roomId = backStackEntry.arguments?.getString("roomId")?:""))
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.example.kotlingdemoapp
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,13 +17,17 @@ import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewViewModel
 @Composable
 fun ChatOverviewScreen(
     modifier: Modifier = Modifier,
-    viewModel: ChatOverviewViewModel = viewModel()
+    viewModel: ChatOverviewViewModel = viewModel(),
+    onNextButtonClicked : (roomId : String) -> Unit
 ){
     val roomState by viewModel.roomsUiState.collectAsState();
     LazyColumn(){
         items(roomState.rooms?: emptyList()){
             Box(modifier=Modifier.background(color = Color(0, 255, 0))){
-                Text(text = "room.name" + it.displayName)
+                Text(
+                    text = "room.name" + it.displayName,
+                    modifier = Modifier.clickable { onNextButtonClicked(it.roomId) }
+                )
             }
         }
     }

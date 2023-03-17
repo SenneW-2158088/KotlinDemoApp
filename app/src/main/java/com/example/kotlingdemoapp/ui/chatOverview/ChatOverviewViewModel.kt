@@ -20,6 +20,7 @@ class ChatOverviewViewModel : ViewModel() {
     )
     val roomsUiState : StateFlow<ChatOverviewUIState>
         get() = _roomsUiState
+
     init {
         // Create query to listen to room summary list
         val roomSummariesQuery = roomSummaryQueryParams {
@@ -27,6 +28,7 @@ class ChatOverviewViewModel : ViewModel() {
         }
         viewModelScope.launch {
             session.roomService().getRoomSummariesLive(roomSummariesQuery).observeForever(){
+                // all methods of state-flow are thread-safe (https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/)
                 rooms -> setRooms(rooms);
             }
         }
