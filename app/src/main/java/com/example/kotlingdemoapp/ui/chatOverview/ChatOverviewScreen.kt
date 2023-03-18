@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
@@ -23,7 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewUIState
 import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewViewModel
+import com.example.kotlingdemoapp.ui.hamburgerMenu.HamburgerMenu
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
+import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import timber.log.Timber
 
@@ -36,7 +40,12 @@ fun ChatOverviewScreen(
     onNextButtonClicked : (roomId : String) -> Unit
 ){
     val roomState:ChatOverviewUIState by viewModel.roomsUiState.collectAsState();
+
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+
     Scaffold(
+        scaffoldState = scaffoldState,
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
@@ -48,7 +57,9 @@ fun ChatOverviewScreen(
                     Text(text = "Chat Overview")
                 },
                 navigationIcon = {
-                    IconButton( onClick = {} ) {
+                    IconButton( onClick = {
+                        scope.launch{ scaffoldState.drawerState.open() }
+                    } ) {
                         Icon(imageVector = Icons.Rounded.Menu, contentDescription = "HamburgerMenu Icon")
                     }
                 },
@@ -62,7 +73,8 @@ fun ChatOverviewScreen(
                     }
                 }
             )
-        }
+        },
+        drawerContent = { HamburgerMenu() },
     )
     {
         Box(modifier = Modifier.fillMaxSize()){
