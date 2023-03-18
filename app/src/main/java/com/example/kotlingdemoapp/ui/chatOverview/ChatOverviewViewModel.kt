@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kotlingdemoapp.SessionHolder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.Session
