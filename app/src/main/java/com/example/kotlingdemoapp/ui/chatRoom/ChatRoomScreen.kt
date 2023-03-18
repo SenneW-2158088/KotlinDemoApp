@@ -2,15 +2,11 @@ package com.example.kotlingdemoapp.ui.chatRoom
 
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +19,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.platform.LocalDensity
@@ -37,12 +32,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.room.model.message.MessageContent
+import coil.compose.AsyncImage
 
 
 @Composable
 fun ChatRoomScreen(
     modifier: Modifier = Modifier,
-    viewModel: ChatRoomViewModel
+    viewModel: ChatRoomViewModel,
 ){
     val uiState by viewModel.chatsUiState.collectAsState()
     val scrollState = rememberLazyListState()
@@ -75,7 +71,7 @@ const val ConversationTestTag = "ConversationTestTag"
 
 @Composable
 fun Messages(
-    messages: List<MessageContent>,
+    messages: List<UserMessage>,
     navigateToProfile: (String) -> Unit,
     scrollState: LazyListState,
     modifier: Modifier = Modifier
@@ -92,11 +88,11 @@ fun Messages(
                 .fillMaxSize()
         ) {
             for (index in messages.indices) {
-                val prevAuthor = messages.getOrNull(index - 1)?.msgType
-                val nextAuthor = messages.getOrNull(index + 1)?.msgType
+                val prevAuthor = messages.getOrNull(index - 1)?.messageContent?.msgType
+                val nextAuthor = messages.getOrNull(index + 1)?.messageContent?.msgType
                 val content = messages[index]
-                val isFirstMessageByAuthor = prevAuthor != content.msgType
-                val isLastMessageByAuthor = nextAuthor != content.msgType
+                val isFirstMessageByAuthor = prevAuthor != content.messageContent.msgType
+                val isLastMessageByAuthor = nextAuthor != content.messageContent.msgType
 
                 // Hardcode day dividers for simplicity
                 if (index == messages.size - 1) {
@@ -113,7 +109,7 @@ fun Messages(
                     Message(
                         onAuthorClick = { name -> navigateToProfile(name) },
                         msg = content,
-                        isUserMe = content.msgType == authorMe,
+                        isUserMe = content.messageContent.msgType == authorMe,
                         isFirstMessageByAuthor = isFirstMessageByAuthor,
                         isLastMessageByAuthor = isLastMessageByAuthor
                     )
@@ -201,7 +197,7 @@ fun JumpToBottom(
 @Composable
 fun Message(
     onAuthorClick: (String) -> Unit,
-    msg: MessageContent,
+    msg: UserMessage,
     isUserMe: Boolean,
     isFirstMessageByAuthor: Boolean,
     isLastMessageByAuthor: Boolean
@@ -216,19 +212,19 @@ fun Message(
     Row(modifier = spaceBetweenAuthors) {
         if (isLastMessageByAuthor) {
             // Avatar
-//            Image(
-//                modifier = Modifier
-//                    .clickable(onClick = { onAuthorClick(msg.msgType) })
-//                    .padding(horizontal = 16.dp)
-//                    .size(42.dp)
-//                    .border(1.5.dp, borderColor, CircleShape)
-//                    .border(3.dp, MaterialTheme.colorScheme.surface, CircleShape)
-//                    .clip(CircleShape)
-//                    .align(Alignment.Top),
-////                painter = painterResource(id = msg.),
-//                contentScale = ContentScale.Crop,
-//                contentDescription = null,
-//            )
+            AsyncImage(
+                modifier = Modifier
+                    .clickable(onClick = { onAuthorClick(msg.messageContent.msgType) })
+                    .padding(horizontal = 16.dp)
+                    .size(42.dp)
+                    .border(1.5.dp, borderColor, CircleShape)
+                    .border(3.dp, MaterialTheme.colorScheme.surface, CircleShape)
+                    .clip(CircleShape)
+                    .align(Alignment.Top),
+                model = msg.profileUrl,
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+            )
         } else {
             // Space under avatar
             Spacer(modifier = Modifier.width(74.dp))
@@ -248,7 +244,7 @@ fun Message(
 
 @Composable
 fun AuthorAndTextMessage(
-    msg: MessageContent,
+    msg: UserMessage,
     isUserMe: Boolean,
     isFirstMessageByAuthor: Boolean,
     isLastMessageByAuthor: Boolean,
@@ -257,7 +253,7 @@ fun AuthorAndTextMessage(
 ) {
     Column(modifier = modifier) {
         if (isLastMessageByAuthor) {
-            AuthorNameTimestamp(msg)
+            AuthorNameTimestamp(msg.messageContent)
         }
         ChatItemBubble(msg, isUserMe, authorClicked = authorClicked)
         if (isFirstMessageByAuthor) {
@@ -323,7 +319,7 @@ private fun RowScope.DayHeaderLine() {
 
 @Composable
 fun ChatItemBubble(
-    message: MessageContent,
+    message: UserMessage,
     isUserMe: Boolean,
     authorClicked: (String) -> Unit
 ) {
@@ -340,23 +336,24 @@ fun ChatItemBubble(
             shape = ChatBubbleShape
         ) {
             ClickableMessage(
-                message = message,
+                message = message.messageContent,
                 isUserMe = isUserMe,
                 authorClicked = authorClicked
             )
         }
 
-//        message.image?.let {
+        // load image if if image in message
+//        message.profileUrl?.let {
 //            Spacer(modifier = Modifier.height(4.dp))
 //            Surface(
 //                color = backgroundBubbleColor,
 //                shape = ChatBubbleShape
 //            ) {
-//                Image(
-//                    painter = painterResource(it),
+//                AsyncImage(
+//                    model = it,
 //                    contentScale = ContentScale.Fit,
 //                    modifier = Modifier.size(160.dp),
-//                    contentDescription = stringResource(id = R.string.attached_image)
+//                    contentDescription = "nice image"
 //                )
 //            }
 //        }

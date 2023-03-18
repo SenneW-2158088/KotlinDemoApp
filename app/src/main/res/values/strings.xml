@@ -43,4 +43,5 @@
     <string name="login_screen_title">Login</string>
     <string name="chatoverview_screen_title">Chat Overview</string>
     <string name="chat_room">Chat Room</string>
+    <string name="user_search">User Search</string>
 </resources>

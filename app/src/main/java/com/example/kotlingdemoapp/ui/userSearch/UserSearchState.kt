@@ -1,5 +1,7 @@
 package com.example.kotlingdemoapp.ui.userSearch
 
-class UserSearchState {
+import org.matrix.android.sdk.api.session.user.model.User
 
-}
+data class UserSearchState (
+    val users: List<User> = listOf(),
+)

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.content.ContentUrlResolver
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.getRoom
 import org.matrix.android.sdk.api.session.room.Room
@@ -19,6 +20,10 @@ import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.session.room.timeline.TimelineSettings
 
 class ChatRoomViewModel(val roomId: String) : ViewModel(), Timeline.Listener {
+    companion object {
+        private const val THUMBNAIL_SIZE = 250
+    }
+
     val session : Session = SessionHolder.currentSession!!
     private var timeline: Timeline? = null
 
@@ -30,7 +35,7 @@ class ChatRoomViewModel(val roomId: String) : ViewModel(), Timeline.Listener {
     init{
         room = session.getRoom(roomId)
         viewModelScope.launch {
-            room?.readService()?.markAsRead(ReadService.MarkAsReadParams.READ_RECEIPT)
+//            room?.readService()?.markAsRead(ReadService.MarkAsReadParams.READ_RECEIPT)
         }
         val timelineSettings = TimelineSettings(
             initialSize = 30
@@ -64,11 +69,19 @@ class ChatRoomViewModel(val roomId: String) : ViewModel(), Timeline.Listener {
         // You probably want to process with DiffUtil before dispatching to your recyclerview
         val size : Int = snapshot.count();
         println("SIZE OF THE SNAPCHOT::::" + size);
-        var messages = mutableListOf<MessageContent>()
+        var messages = mutableListOf<UserMessage>()
         for (event in snapshot){
             var message = event.root.getClearContent().toModel<MessageContent>(false) ?: continue;
-            Log.d("EVENT BABY", "EVENT BABY????: " + message.body)
-            messages.add(message)
+            var avatarUrl = event.senderInfo.avatarUrl;
+            var resolvedImage = session.contentUrlResolver()
+                    ?.resolveThumbnail(
+                        avatarUrl,
+                        THUMBNAIL_SIZE,
+                        THUMBNAIL_SIZE,
+                        ContentUrlResolver.ThumbnailMethod.SCALE
+                    )
+            Log.d("EVENT BABY", "EVENT BABY????: " + avatarUrl)
+            messages.add(UserMessage(message, resolvedImage?:""))
         }
         _chatsUiState.update {
             currentState ->

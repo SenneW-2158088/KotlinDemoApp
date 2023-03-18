@@ -36,16 +36,17 @@ import timber.log.Timber
 fun ChatOverviewScreen(
     modifier: Modifier = Modifier,
     viewModel: ChatOverviewViewModel = viewModel(),
-    onNextButtonClicked : (roomId : String) -> Unit
+    onRoomClicked : (roomId : String) -> Unit,
+    onSearchClicked : () -> Unit
 ){
     val roomState:ChatOverviewUIState by viewModel.roomsUiState.collectAsState();
     Box(
         modifier = Modifier
             .fillMaxSize()
     ){
-        Rooms(roomState = roomState, onNextButtonClicked = onNextButtonClicked)
+        Rooms(roomState = roomState, onRoomClicked = onRoomClicked)
         FloatingActionButton(
-            onClick = {},
+            onClick = {onSearchClicked()},
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(5.dp)
@@ -68,7 +69,7 @@ fun Modifier.badgeLayout() =
         }
     }
 @Composable
-fun Rooms(roomState: ChatOverviewUIState, onNextButtonClicked : (roomId : String) -> Unit){
+fun Rooms(roomState: ChatOverviewUIState, onRoomClicked : (roomId : String) -> Unit){
     LazyColumn(){
         items(roomState.rooms?: emptyList()){
             Row(modifier= Modifier
@@ -81,7 +82,7 @@ fun Rooms(roomState: ChatOverviewUIState, onNextButtonClicked : (roomId : String
                     text = it.displayName,
                     color = MaterialTheme.colors.onBackground,
                     modifier = Modifier
-                        .clickable { onNextButtonClicked(it.roomId) }
+                        .clickable { onRoomClicked(it.roomId) }
                 )
                 Timber.tag("NOTIFICATION!!!").d("%s", it.notificationCount)
 //                val item :MessageContent? = it.latestPreviewableEvent?.root?.getClearContent().toModel<MessageContent>(false);
@@ -90,12 +91,33 @@ fun Rooms(roomState: ChatOverviewUIState, onNextButtonClicked : (roomId : String
 //                    modifier = Modifier.size(12.dp),
 //                    color = MaterialTheme.colors.onBackground
 //                )
-                Text(
-                    text = it.notificationCount.toString(),
-                    modifier = Modifier
-                        .background(Color(0xFF86A0EE), shape = CircleShape)
-                        .badgeLayout()
-                )
+                Row{
+                    Text(
+                        text = it.notificationCount.toString(),
+                        modifier = Modifier
+                            .background(Color(0xFF86A0EE), shape = CircleShape)
+                            .badgeLayout()
+                    )
+                    // THESE NO WORKY?
+//                    Text(
+//                        text = it.highlightCount.toString(),
+//                        modifier = Modifier
+//                            .background(Color(0xFF86A0EE), shape = CircleShape)
+//                            .badgeLayout()
+//                    )
+//                    Text(
+//                        text = it.threadNotificationCount.toString(),
+//                        modifier = Modifier
+//                            .background(Color(0xFF86A0EE), shape = CircleShape)
+//                            .badgeLayout()
+//                    )
+//                    Text(
+//                        text = it.threadHighlightCount.toString(),
+//                        modifier = Modifier
+//                            .background(Color(0xFF86A0EE), shape = CircleShape)
+//                            .badgeLayout()
+//                    )
+                }
             }
         }
     }
@@ -106,6 +128,6 @@ fun Rooms(roomState: ChatOverviewUIState, onNextButtonClicked : (roomId : String
 private fun OverviewPreview(){
     val state:ChatOverviewUIState = ChatOverviewUIState(listOf(RoomSummary("1", "bla bla", "ada", "daldjf", encryptionEventTs = Long.MAX_VALUE, isEncrypted = false, typingUsers = listOf(), notificationCount = 5)))
     DemoTheme (darkTheme = true) {
-        Rooms(roomState = state, onNextButtonClicked = {})
+        Rooms(roomState = state, onRoomClicked = {})
     }
 }

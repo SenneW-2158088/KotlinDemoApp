@@ -7,10 +7,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.matrix.android.sdk.api.query.RoomCategoryFilter
+import org.matrix.android.sdk.api.query.SpaceFilter
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
+import timber.log.Timber
 
 class ChatOverviewViewModel : ViewModel() {
     val session : Session = SessionHolder.currentSession!!
@@ -26,6 +29,7 @@ class ChatOverviewViewModel : ViewModel() {
         val roomSummariesQuery = roomSummaryQueryParams {
             memberships = Membership.activeMemberships()
         }
+        Timber.tag("A NOTIFICATIONS??").d("NOTFICATIONS HERE::: %s", session.roomService().getNotificationCountForRooms(roomSummariesQuery).notificationCount)
         viewModelScope.launch {
             session.roomService().getRoomSummariesLive(roomSummariesQuery).observeForever(){
                 // all methods of state-flow are thread-safe (https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/)

@@ -7,18 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.kotlingdemoapp.ui.chatRoom.ChatRoomScreen
 import com.example.kotlingdemoapp.ui.chatRoom.ChatRoomViewModel
+import com.example.kotlingdemoapp.ui.userSearch.UserSearchScreen
 
 
 enum class DemoScreen(@StringRes val title: Int){
     Login(title = R.string.login_screen_title),
     ChatOverview(title = R.string.chatoverview_screen_title),
+    UserSearch(title = R.string.user_search),
     ChatRoom(title = R.string.chat_room)
 }
 
@@ -40,7 +41,13 @@ fun DemoApp(
             }
             composable(route = DemoScreen.ChatOverview.name){
                 ChatOverviewScreen(
-                    onNextButtonClicked = { roomId : String -> navController.navigate(DemoScreen.ChatRoom.name + "/" + roomId)}
+                    onRoomClicked = { roomId : String -> navController.navigate(DemoScreen.ChatRoom.name + "/" + roomId)},
+                    onSearchClicked = { navController.navigate(DemoScreen.UserSearch.name) }
+                )
+            }
+            composable(route = DemoScreen.UserSearch.name){
+                UserSearchScreen(
+                    onRoomCreated = {roomId: String -> navController.navigate(DemoScreen.ChatRoom.name + "/" + roomId)}
                 )
             }
             composable(
@@ -53,7 +60,10 @@ fun DemoApp(
                     }
                 )
             ){ backStackEntry ->
-                ChatRoomScreen(Modifier, ChatRoomViewModel(roomId = backStackEntry.arguments?.getString("roomId")?:""))
+                ChatRoomScreen(
+                    Modifier,
+                    ChatRoomViewModel(roomId = backStackEntry.arguments?.getString("roomId") ?: "")
+                )
             }
         }
     }
