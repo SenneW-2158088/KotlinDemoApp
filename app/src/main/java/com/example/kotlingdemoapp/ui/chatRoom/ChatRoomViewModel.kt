@@ -1,9 +1,12 @@
 package com.example.kotlingdemoapp.ui.chatRoom
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kotlingdemoapp.SessionHolder
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.events.model.toModel
@@ -21,6 +24,9 @@ class ChatRoomViewModel(val roomId: String) : ViewModel(), Timeline.Listener {
 
     private var room: Room? = null;
 
+    private var _chatsUiState : MutableStateFlow<ChatState> = MutableStateFlow(ChatState());
+    val chatsUiState = _chatsUiState
+
     init{
         room = session.getRoom(roomId)
         viewModelScope.launch {
@@ -35,6 +41,10 @@ class ChatRoomViewModel(val roomId: String) : ViewModel(), Timeline.Listener {
             it.addListener(this)
             it.start()
         }
+    }
+
+    fun sendMessage(message:String){
+        room?.sendService()?.sendTextMessage(message);
     }
 
     // === TIMELINE METHOD OVERRIDES ===
@@ -54,9 +64,15 @@ class ChatRoomViewModel(val roomId: String) : ViewModel(), Timeline.Listener {
         // You probably want to process with DiffUtil before dispatching to your recyclerview
         val size : Int = snapshot.count();
         println("SIZE OF THE SNAPCHOT::::" + size);
+        var messages = mutableListOf<MessageContent>()
         for (event in snapshot){
             var message = event.root.getClearContent().toModel<MessageContent>(false) ?: continue;
             Log.d("EVENT BABY", "EVENT BABY????: " + message.body)
+            messages.add(message)
+        }
+        _chatsUiState.update {
+            currentState ->
+                currentState.copy(messages = messages)
         }
     }
 }

@@ -21,22 +21,28 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
+// src: cupcake ap
+// and: https://developer.android.com/jetpack/compose/designsystems/material
 private val DarkColorPalette = darkColors(
-    primary = Pink400,
-    primaryVariant = Pink950,
-    onPrimary = Black,
-    secondary = Purple400,
-    secondaryVariant = Purple400,
-    onSecondary = Black
+    background = dp00,
+    onBackground = fg00,
+    primary = Primary,
+    primaryVariant = Secondary,
+    onPrimary = fg00,
+    secondary = gradient0,
+    secondaryVariant = gradient0,
+    onSecondary = fg00,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Pink600,
-    primaryVariant = Pink950,
-    onPrimary = White,
-    secondary = Purple400,
-    secondaryVariant = Purple700,
-    onSecondary = Black
+    background = dp00,
+    onBackground = fg00,
+    primary = Primary,
+    primaryVariant = Secondary,
+    onPrimary = fg00,
+    secondary = gradient0,
+    secondaryVariant = gradient0,
+    onSecondary =fg00
 )
 
 @Composable

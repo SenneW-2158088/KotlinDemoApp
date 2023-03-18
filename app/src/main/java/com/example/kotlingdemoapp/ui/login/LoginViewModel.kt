@@ -37,7 +37,7 @@ class LoginViewModel : ViewModel(){
         }
     }
 
-    public fun launchAuthProcess() {
+    public fun launchAuthProcess(navigate : () -> Unit) {
         val username = _uiState.value.username
         val password = _uiState.value.password
         val homeserver = _uiState.value.homeserver
@@ -74,6 +74,7 @@ class LoginViewModel : ViewModel(){
                 // same stuff that happens in SampleApp
                 session.open()
                 session.syncService().startSync(true)
+                navigate();
             }
         }
         // Then you can retrieve the authentication service.

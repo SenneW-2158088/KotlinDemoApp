@@ -22,7 +22,7 @@ fun LoginScreen(
         TextField(value = uiState.homeserver, onValueChange = {loginViewModel.setHomeserver(it)})
         TextField(value = uiState.username, onValueChange = {loginViewModel.setUsername(it)})
         TextField(value = uiState.password, onValueChange = {loginViewModel.setPassword(it)})
-        Button(onClick = { loginViewModel.launchAuthProcess(); onNextButtonClicked() }) {
+        Button(onClick = { loginViewModel.launchAuthProcess(onNextButtonClicked); }) {
         }
     }
 }
