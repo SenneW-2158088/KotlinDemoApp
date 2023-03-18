@@ -41,6 +41,9 @@ fun ChatOverviewScreen(
             .fillMaxSize(),
         topBar = {
             TopAppBar(
+                elevation = 0.dp,
+                modifier = Modifier,
+                backgroundColor = MaterialTheme.colors.background,
                 title = {
                     Text(text = "Chat Overview")
                 },
@@ -62,13 +65,17 @@ fun ChatOverviewScreen(
         }
     )
     {
-        Rooms(roomState = roomState, onNextButtonClicked = onNextButtonClicked)
-        FloatingActionButton(
-            onClick = {},
-            modifier = Modifier
-                .padding(5.dp))
-        {
+        Box(modifier = Modifier.fillMaxSize()){
+            Rooms(roomState = roomState, onNextButtonClicked = onNextButtonClicked)
+            FloatingActionButton(
+                onClick = {},
+                modifier = Modifier
+                    .padding(12.dp)
+                    .align(Alignment.BottomEnd)
+            )
+            {
 
+            }
         }
     }
 }
