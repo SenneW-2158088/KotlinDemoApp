@@ -86,7 +86,7 @@ private fun Header(name : String = "",state : HamburgerMenuUIState) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.background)
-        .height(118.dp)
+        .wrapContentHeight()
         .padding(16.dp),
         ) {
         Column() {
