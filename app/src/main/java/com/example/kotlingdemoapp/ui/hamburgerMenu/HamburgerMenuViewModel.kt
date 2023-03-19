@@ -12,6 +12,7 @@ import org.matrix.android.sdk.api.session.room.model.Membership
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
 import org.matrix.android.sdk.api.session.room.spaceSummaryQueryParams
+import org.matrix.android.sdk.api.session.profile.ProfileService
 
 class HamburgerMenuViewModel : ViewModel() {
     val session : Session = SessionHolder.currentSession!!
@@ -29,6 +30,11 @@ class HamburgerMenuViewModel : ViewModel() {
         viewModelScope.launch {
             session.spaceService().getSpaceSummariesLive(spaceSummariesLive).observeForever {
                 spaces -> setSpaces(spaces)
+        viewModelScope.launch {
+            var profileService : ProfileService = session.profileService()
+            _hamburgerMenuUiState.update { currentState ->
+                currentState.copy(userName = profileService.getDisplayName(session.myUserId).get(),
+                                userDomain = session.myUserId)
             }
         }
     }
