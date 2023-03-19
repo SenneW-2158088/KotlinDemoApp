@@ -29,13 +29,13 @@ class ChatOverviewViewModel : ViewModel() {
         val roomSummariesQuery = roomSummaryQueryParams {
             memberships = Membership.activeMemberships()
         }
-        Timber.tag("A NOTIFICATIONS??").d("NOTFICATIONS HERE::: %s", session.roomService().getNotificationCountForRooms(roomSummariesQuery).notificationCount)
         viewModelScope.launch {
             session.roomService().getRoomSummariesLive(roomSummariesQuery).observeForever(){
                 // all methods of state-flow are thread-safe (https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/)
                 rooms -> setRooms(rooms);
             }
         }
+        Timber.tag("A NOTIFICATIONS??").d("NOTFICATIONS HERE::: %s", session.roomService().getNotificationCountForRooms(roomSummariesQuery).notificationCount)
     }
 
     private fun setRooms(rooms : List<RoomSummary>){
