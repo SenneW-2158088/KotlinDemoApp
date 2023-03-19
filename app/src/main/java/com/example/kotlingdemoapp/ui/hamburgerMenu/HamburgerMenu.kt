@@ -82,11 +82,11 @@ fun DividerItem(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Header(name : String = "",state : HamburgerMenuUIState) {
+private fun Header(name : String = "", state : HamburgerMenuUIState) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.background)
-        .wrapContentHeight()
+        .wrapContentHeight(Alignment.CenterVertically)
         .padding(16.dp),
         ) {
         Column() {
@@ -123,7 +123,6 @@ private fun ProfileContent(modifier: Modifier = Modifier, state : HamburgerMenuU
         modifier = modifier
     ) {
         Icon (
-            modifier = Modifier.fillMaxHeight(),
             imageVector = Icons.Outlined.Circle,
             tint = MaterialTheme.colors.onPrimary,
             contentDescription = "Account image",
