@@ -3,6 +3,8 @@ package com.example.kotlingdemoapp.ui.hamburgerMenu
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -19,9 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewUIState
-import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewViewModel
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
+import org.matrix.android.sdk.api.session.room.model.RoomSummary
 
 @Preview
 @Composable
@@ -38,7 +39,7 @@ fun HamburgerMenu(modifier: Modifier = Modifier,
             Header("Nexus", hamburgerMenuState)
             ButtonItem(icon = Icons.Rounded.Folder, text = "Folders")
             DividerItem()
-            FoldableItem("Change Space")
+            FoldableItem("Change Space", hamburgerMenuState)
         }
     }
 }
@@ -143,7 +144,7 @@ private fun ProfileContent(modifier: Modifier = Modifier, state : HamburgerMenuU
 }
 
 @Composable
-private fun FoldableItem(name : String = "") {
+private fun FoldableItem(name: String = "", hamburgerMenuState: HamburgerMenuUIState) {
     var expanded by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -160,22 +161,26 @@ private fun FoldableItem(name : String = "") {
             onClick = { expanded = !expanded })
     }
     if (expanded) {
-        FoldableItemContent()
+        LazyColumn(){
+            items (hamburgerMenuState.spaces) {
+                space -> FoldableItemContent(space)
+            }
+        }
     }
 }
 
 @Composable
-fun FoldableItemContent() {
+fun FoldableItemContent(roomSummary: RoomSummary) {
     Row(modifier = Modifier
-            .padding(
-                vertical = 8.dp,
-                horizontal = 26.dp
-            )
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.secondary),
+        .padding(
+            vertical = 8.dp,
+            horizontal = 26.dp
+        )
+        .fillMaxWidth()
+        .background(MaterialTheme.colors.secondary),
         verticalAlignment = CenterVertically
     ) {
-        ButtonItem(text = "BHHOMBOCLATTTTTT")
+        ButtonItem(text = roomSummary.displayName)
     }
 }
 

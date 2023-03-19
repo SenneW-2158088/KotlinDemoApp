@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.room.model.Membership
+import org.matrix.android.sdk.api.session.room.model.RoomSummary
+import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
+import org.matrix.android.sdk.api.session.room.spaceSummaryQueryParams
 import org.matrix.android.sdk.api.session.profile.ProfileService
 
 class HamburgerMenuViewModel : ViewModel() {
@@ -20,6 +24,15 @@ class HamburgerMenuViewModel : ViewModel() {
         get() = _hamburgerMenuUiState
 
     init {
+        val spaceSummariesLive = spaceSummaryQueryParams{
+            memberships = Membership.activeMemberships()
+        }
+        viewModelScope.launch {
+            session.spaceService().getSpaceSummariesLive(spaceSummariesLive)
+                .observeForever { spaces ->
+                    setSpaces(spaces)
+                }
+        }
         viewModelScope.launch {
             var profileService : ProfileService = session.profileService()
             _hamburgerMenuUiState.update { currentState ->
@@ -28,4 +41,12 @@ class HamburgerMenuViewModel : ViewModel() {
             }
         }
     }
+
+    private fun setSpaces(spaces: List<RoomSummary>){
+        _hamburgerMenuUiState.update {
+            current ->
+                current.copy(spaces = spaces)
+        }
+    }
+
 }
