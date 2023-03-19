@@ -28,8 +28,11 @@ class HamburgerMenuViewModel : ViewModel() {
             memberships = Membership.activeMemberships()
         }
         viewModelScope.launch {
-            session.spaceService().getSpaceSummariesLive(spaceSummariesLive).observeForever {
-                spaces -> setSpaces(spaces)
+            session.spaceService().getSpaceSummariesLive(spaceSummariesLive)
+                .observeForever { spaces ->
+                    setSpaces(spaces)
+                }
+        }
         viewModelScope.launch {
             var profileService : ProfileService = session.profileService()
             _hamburgerMenuUiState.update { currentState ->
