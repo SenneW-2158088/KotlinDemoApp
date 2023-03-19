@@ -1,6 +1,5 @@
 package com.example.kotlingdemoapp.ui.hamburgerMenu
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,24 +7,35 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material.icons.outlined.SyncAlt
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewUIState
+import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewViewModel
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
 
 @Preview
 @Composable
-fun HamburgerMenu() {
+fun HamburgerMenu(modifier: Modifier = Modifier,
+                  viewModel: HamburgerMenuViewModel = viewModel())
+{
+    val hamburgerMenuState: HamburgerMenuUIState by viewModel.hamburgerMenuUiState.collectAsState();
+
     DemoTheme(true) {
         Column(modifier = Modifier
             .fillMaxHeight()
             .background(MaterialTheme.colors.primaryVariant)) {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
-            Header("Nexus")
+            Header("Nexus", hamburgerMenuState)
             ButtonItem(icon = Icons.Rounded.Folder, text = "Folders")
             DividerItem()
             FoldableItem("Change Space")
@@ -39,13 +49,10 @@ fun ButtonItem(modifier: Modifier = Modifier, onItemClicked : () -> Unit = {}, i
         modifier = Modifier
             .height(56.dp)
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 16.dp)
             .clickable(onClick = onItemClicked),
         verticalAlignment = CenterVertically
     ) {
-        val paddingSizeModifier = Modifier
-            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-            .size(24.dp)
         if (icon != null) {
             Icon (
                 imageVector = icon,
@@ -54,8 +61,10 @@ fun ButtonItem(modifier: Modifier = Modifier, onItemClicked : () -> Unit = {}, i
             )
         }
         else
-            Spacer(modifier = paddingSizeModifier)
-
+            Spacer(modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                .size(24.dp)
+                .align(Alignment.CenterVertically))
         Text(
             text,
             color = MaterialTheme.colors.onSurface,
@@ -73,31 +82,64 @@ fun DividerItem(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Header(name : String = "") {
+private fun Header(name : String = "",state : HamburgerMenuUIState) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .background(MaterialTheme.colors.background)
-        .height(102.dp)
+        .height(118.dp)
         .padding(16.dp),
-        verticalAlignment = CenterVertically) {
+        ) {
         Column() {
             Text(
                 name,
                 color = MaterialTheme.colors.onPrimary,
+                fontSize = 18.sp,
             )
-            ProfileHeader()
+            ProfileHeader(state = state)
         }
     }
 }
 
 @Composable
-private fun ProfileHeader(modifier: Modifier = Modifier) {
+private fun ProfileHeader(modifier: Modifier = Modifier, state : HamburgerMenuUIState) {
     Row(
         modifier = Modifier
-            .padding(top = 10.dp)
-            .background(MaterialTheme.colors.secondary)
+            .padding(top = 22.dp),
+        verticalAlignment = CenterVertically
     ) {
-        Text("Profiel hier weyyooww maat ziek bro inshllah")
+        ProfileContent(state = state)
+        Spacer(Modifier.weight(1f))
+        Icon (
+            imageVector = Icons.Outlined.SyncAlt,
+            tint = MaterialTheme.colors.onPrimary,
+            contentDescription = "Change Account",
+        )
+    }
+}
+
+@Composable
+private fun ProfileContent(modifier: Modifier = Modifier, state : HamburgerMenuUIState) {
+    Row (
+        modifier = modifier
+    ) {
+        Icon (
+            modifier = Modifier.fillMaxHeight(),
+            imageVector = Icons.Outlined.Circle,
+            tint = MaterialTheme.colors.onPrimary,
+            contentDescription = "Account image",
+        )
+        Column() {
+            Text(
+                state.userName,
+                color = MaterialTheme.colors.onPrimary,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+            Text(
+                state.userDomain,
+                color = MaterialTheme.colors.onPrimary,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
     }
 }
 
@@ -107,6 +149,7 @@ private fun FoldableItem(name : String = "") {
     Row(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 10.dp),
+        verticalAlignment = CenterVertically
     ) {
         Text(
             name,
@@ -125,12 +168,13 @@ private fun FoldableItem(name : String = "") {
 @Composable
 fun FoldableItemContent() {
     Row(modifier = Modifier
-        .padding(
-            vertical = 8.dp,
-            horizontal = 26.dp
-        )
-        .fillMaxWidth()
-        .background(MaterialTheme.colors.secondary)
+            .padding(
+                vertical = 8.dp,
+                horizontal = 26.dp
+            )
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.secondary),
+        verticalAlignment = CenterVertically
     ) {
         ButtonItem(text = "BHHOMBOCLATTTTTT")
     }
