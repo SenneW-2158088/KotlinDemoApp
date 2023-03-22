@@ -1,10 +1,12 @@
 package com.example.kotlingdemoapp.ui.hamburgerMenu
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -16,12 +18,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kotlingdemoapp.SessionHolder
+import coil.compose.rememberAsyncImagePainter
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
 import kotlinx.coroutines.runBlocking
 import org.matrix.android.sdk.api.session.Session
@@ -88,10 +92,11 @@ fun DividerItem(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Header(name : String = "",state : HamburgerMenuUIState) {
+private fun Header(name : String = "", state : HamburgerMenuUIState) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .height(118.dp)
+        .background(MaterialTheme.colors.background)
+        .wrapContentHeight(Alignment.CenterVertically)
         .padding(16.dp),
         ) {
         Column() {
@@ -123,16 +128,21 @@ private fun ProfileHeader(modifier: Modifier = Modifier, state : HamburgerMenuUI
 }
 
 @Composable
+private fun ProfilePicture(modifier: Modifier = Modifier, state: HamburgerMenuUIState) {
+    Image(
+        painter = rememberAsyncImagePainter(state.resolvedImageURL),
+        contentDescription = null,
+        modifier = Modifier.size(50.dp)
+                        .clip(CircleShape)
+    )
+}
+
+@Composable
 private fun ProfileContent(modifier: Modifier = Modifier, state : HamburgerMenuUIState) {
     Row (
         modifier = modifier
     ) {
-        Icon (
-            modifier = Modifier.fillMaxHeight(),
-            imageVector = Icons.Outlined.Circle,
-            tint = MaterialTheme.colors.onPrimary,
-            contentDescription = "Account image",
-        )
+        ProfilePicture(state = state)
         Column() {
             Text(
                 state.userName,
