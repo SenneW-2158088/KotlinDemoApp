@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             lastSession.syncService().startSync(true)
         }
         setContent {
-            DemoTheme {
+            DemoTheme (darkTheme = true) {
                 DemoApp()
             }
         }

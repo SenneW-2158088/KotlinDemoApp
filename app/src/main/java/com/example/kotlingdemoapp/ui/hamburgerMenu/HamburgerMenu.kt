@@ -21,7 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kotlingdemoapp.SessionHolder
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
+import kotlinx.coroutines.runBlocking
+import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.getRoom
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 
 @Preview
@@ -34,9 +38,10 @@ fun HamburgerMenu(modifier: Modifier = Modifier,
     DemoTheme(true) {
         Column(modifier = Modifier
             .fillMaxHeight()
-            .background(MaterialTheme.colors.primaryVariant)) {
+            .background(MaterialTheme.colors.background)) {
             Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
             Header("Nexus", hamburgerMenuState)
+            DividerItem()
             ButtonItem(icon = Icons.Rounded.Folder, text = "Folders")
             DividerItem()
             FoldableItem("Change Space", hamburgerMenuState)
@@ -86,7 +91,6 @@ fun DividerItem(modifier: Modifier = Modifier) {
 private fun Header(name : String = "",state : HamburgerMenuUIState) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .background(MaterialTheme.colors.background)
         .height(118.dp)
         .padding(16.dp),
         ) {
@@ -181,7 +185,14 @@ fun FoldableItemContent(roomSummary: RoomSummary) {
         .background(MaterialTheme.colors.secondary),
         verticalAlignment = CenterVertically
     ) {
-        ButtonItem(text = roomSummary.displayName)
+        ButtonItem(text = roomSummary.displayName + "(" + roomSummary.joinRules?.name + ", m:folder : " + roomSummary.hasTag("m.folder") + ")")
+//        val session : Session = SessionHolder.currentSession!!
+//        ButtonItem(text = "make folder", onItemClicked = {
+//                runBlocking {
+//                    session.getRoom(roomSummary.roomId)?.tagsService()?.addTag("m.folder", null)
+//                }
+//            }
+//        )
     }
 }
 

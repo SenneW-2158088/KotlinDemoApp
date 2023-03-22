@@ -23,7 +23,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewUIState
+import com.example.kotlingdemoapp.ui.chatOverview.RoomsUIState
 import com.example.kotlingdemoapp.ui.chatOverview.ChatOverviewViewModel
 import com.example.kotlingdemoapp.ui.hamburgerMenu.HamburgerMenu
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
@@ -39,7 +39,7 @@ fun ChatOverviewScreen(
     viewModel: ChatOverviewViewModel = viewModel(),
     onNextButtonClicked : (roomId : String) -> Unit
 ){
-    val roomState:ChatOverviewUIState by viewModel.roomsUiState.collectAsState();
+    val roomState by viewModel.roomsUiState.collectAsState();
 
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -77,16 +77,25 @@ fun ChatOverviewScreen(
         drawerContent = { HamburgerMenu() },
     )
     {
-        Box(modifier = Modifier.fillMaxSize()){
-            Rooms(roomState = roomState, onNextButtonClicked = onNextButtonClicked)
-            FloatingActionButton(
-                onClick = {},
-                modifier = Modifier
-                    .padding(12.dp)
-                    .align(Alignment.BottomEnd)
-            )
-            {
+        when (roomState){
+            is RoomsUIState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize()){
+                    println("SHIT IS LOADINNNGGG")
+                    Text(text="SHIT IS LOADING MEN")
+                }
+            }
+            is RoomsUIState.Success -> {
+                Box(modifier = Modifier.fillMaxSize()){
+                    Rooms(roomState = roomState as RoomsUIState.Success, onNextButtonClicked = onNextButtonClicked)
+                    FloatingActionButton(
+                        onClick = {},
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .align(Alignment.BottomEnd)
+                    ){
 
+                    }
+                }
             }
         }
     }
@@ -107,9 +116,9 @@ fun Modifier.badgeLayout() =
     }
 
 @Composable
-fun Rooms(roomState: ChatOverviewUIState, onNextButtonClicked : (roomId : String) -> Unit){
+fun Rooms(roomState: RoomsUIState.Success, onNextButtonClicked : (roomId : String) -> Unit){
     LazyColumn(){
-        items(roomState.rooms?: emptyList()){
+        items(roomState.rooms){
             Row(modifier= Modifier
                 .background(color = MaterialTheme.colors.background)
                 .padding(4.dp)
@@ -140,11 +149,11 @@ fun Rooms(roomState: ChatOverviewUIState, onNextButtonClicked : (roomId : String
     }
 }
 
-@Preview(name = "Preview Overview")
-@Composable
-private fun OverviewPreview(){
-    val state:ChatOverviewUIState = ChatOverviewUIState(listOf(RoomSummary("1", "bla bla", "ada", "daldjf", encryptionEventTs = Long.MAX_VALUE, isEncrypted = false, typingUsers = listOf(), notificationCount = 5)))
-    DemoTheme (darkTheme = true) {
-        Rooms(roomState = state, onNextButtonClicked = {})
-    }
-}
+//@Preview(name = "Preview Overview")
+//@Composable
+//private fun OverviewPreview(){
+//    val state = listOf(RoomSummary("1", "bla bla", "ada", "daldjf", encryptionEventTs = Long.MAX_VALUE, isEncrypted = false, typingUsers = listOf(), notificationCount = 5))
+//    DemoTheme (darkTheme = true) {
+//        Rooms(roomState = state, onNextButtonClicked = {})
+//    }
+//}
