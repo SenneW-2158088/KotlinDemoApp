@@ -18,3 +18,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kotling Demo App"
 include ':app'
+include ':app:mylibrary'
+include ':mylibrary'

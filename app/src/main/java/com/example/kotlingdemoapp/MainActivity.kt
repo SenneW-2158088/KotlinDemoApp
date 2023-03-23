@@ -1,9 +1,9 @@
 package com.example.kotlingdemoapp
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.kotlingdemoapp.di.SessionHolder
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
 import org.matrix.android.sdk.api.Matrix
 import org.matrix.android.sdk.api.MatrixConfiguration

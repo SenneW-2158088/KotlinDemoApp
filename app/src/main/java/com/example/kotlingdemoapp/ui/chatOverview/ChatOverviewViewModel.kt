@@ -1,23 +1,22 @@
 package com.example.kotlingdemoapp.ui.chatOverview
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.example.kotlingdemoapp.SessionHolder
+import com.example.kotlingdemoapp.di.SessionHolder
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import org.matrix.android.sdk.api.query.RoomCategoryFilter
-import org.matrix.android.sdk.api.query.SpaceFilter
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.room.model.Membership
-import org.matrix.android.sdk.api.session.room.model.RoomSummary
 import org.matrix.android.sdk.api.session.room.roomSummaryQueryParams
-import timber.log.Timber
+import javax.inject.Inject
 
 
-class ChatOverviewViewModel : ViewModel() {
-    val session : Session = SessionHolder.currentSession!!
+class ChatOverviewViewModel @Inject constructor(
+    private val sessionHolder: SessionHolder
+)
+
+    : ViewModel() {
+    val session : Session = sessionHolder.currentSession!!
 
     val roomSummariesQuery = roomSummaryQueryParams {
         memberships = Membership.activeMemberships()

@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material.icons.outlined.SyncAlt
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.runtime.*
@@ -24,12 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kotlingdemoapp.SessionHolder
 import coil.compose.rememberAsyncImagePainter
 import com.example.kotlingdemoapp.ui.theme.DemoTheme
-import kotlinx.coroutines.runBlocking
-import org.matrix.android.sdk.api.session.Session
-import org.matrix.android.sdk.api.session.getRoom
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
 
 @Preview

@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.kotlingdemoapp
+package com.example.kotlingdemoapp.di
 
 import org.matrix.android.sdk.api.session.Session
+import javax.inject.Singleton
 
+@Singleton
 object SessionHolder {
     var currentSession: Session? = null
 }
